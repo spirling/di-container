@@ -18,6 +18,11 @@ class DependenciesContainer
     private $dependencies;
 
     /**
+     * @var array
+     */
+    private $stack = [];
+
+    /**
      * DependenciesContainer constructor.
      */
     public function __construct()
@@ -45,11 +50,21 @@ class DependenciesContainer
      */
     public function get($className)
     {
-        if (array_key_exists($className, $this->dependencies)) {
-            return $this->dependencies[$className]->get();
+        $dependency = null;
+        $stackKey = array_search($className, $this->stack, true);
+        if ($stackKey !== false) {
+            $stackCall = implode('" -> "', array_slice($this->stack, $stackKey));
+            throw new Exception(sprintf('Cyclic dependencies detected for class "%s": "%s"', $className, $stackCall));
         } else {
-            throw new Exception('Dependency "' . $className . '" is not set. Could not get dependency!');
+            $this->stack[] = $className;
+            if (array_key_exists($className, $this->dependencies)) {
+                $dependency = $this->dependencies[$className]->get();
+            } else {
+                throw new Exception('Dependency "' . $className . '" is not set. Could not get dependency!');
+            }
+            array_pop($this->stack);
         }
+        return $dependency;
     }
 
     /**

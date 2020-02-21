@@ -1,7 +1,8 @@
 {
   "name": "spirling/di-container",
-  "type": "library",
   "description": "Dependencies container",
+  "version": "0.0.1",
+  "type": "library",
   "authors": [
     {
       "name": "Johnie Spirling",
@@ -11,10 +12,14 @@
   ],
   "autoload": {
     "psr-4": {
-      "Spirling\\DependenciesContainer\\": "src"
+      "Spirling\\DependenciesContainer\\": "src",
+      "Spirling\\DependenciesContainerTests\\": "tests"
     }
   },
   "require": {
     "php": "^7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7"
   }
 }
