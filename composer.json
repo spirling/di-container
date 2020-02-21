@@ -1,0 +1,20 @@
+{
+  "name": "spirling/di-container",
+  "type": "library",
+  "description": "Dependencies container",
+  "authors": [
+    {
+      "name": "Johnie Spirling",
+      "email": "johnie.spirling@gmail.com",
+      "role": "master"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Spirling\\DependenciesContainer\\": "src"
+    }
+  },
+  "require": {
+    "php": "^7.0"
+  }
+}
