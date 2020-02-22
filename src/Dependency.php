@@ -75,7 +75,7 @@ class Dependency
             if (!is_null($this->dependencies)) {
                 $dependencies = [];
                 foreach ($this->dependencies as $dependency) {
-                    if (class_exists($dependency)) {
+                    if (is_string($dependency) && class_exists($dependency)) {
                         $dependencies[] = self::$container->get($dependency);
                     } else {
                         $dependencies[] = $dependency;
