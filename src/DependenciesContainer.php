@@ -56,10 +56,11 @@ class DependenciesContainer
             $stackCall = implode('" -> "', array_slice($this->stack, $stackKey));
             throw new Exception(sprintf('Cyclic dependencies detected for class "%s": "%s"', $className, $stackCall));
         } else {
-            $this->stack[] = $className;
+            array_push($this->stack, $className);
             if (array_key_exists($className, $this->dependencies)) {
                 $dependency = $this->dependencies[$className]->get();
             } else {
+                array_pop($this->stack);
                 throw new Exception('Dependency "' . $className . '" is not set. Could not get dependency!');
             }
             array_pop($this->stack);
