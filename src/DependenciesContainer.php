@@ -24,10 +24,16 @@ class DependenciesContainer
 
     /**
      * DependenciesContainer constructor.
+     *
+     * @param array $dependencies
+     *
+     * @throws Exception
      */
-    public function __construct()
+    public function __construct($dependencies = [])
     {
-        Dependency::initialize($this);
+        foreach ($dependencies as $className => $childDependencies) {
+            $this->set($className, $dependencies);
+        }
     }
 
     /**
@@ -39,7 +45,7 @@ class DependenciesContainer
      */
     public function set($className, $dependencies = null)
     {
-        return $this->dependencies[$className] = new Dependency($className, $dependencies);
+        return $this->dependencies[$className] = new Dependency($this, $className, $dependencies);
     }
 
     /**
@@ -53,7 +59,7 @@ class DependenciesContainer
         $dependency = null;
         $stackKey = array_search($className, $this->stack, true);
         if ($stackKey !== false) {
-            $stackCall = implode('" -> "', array_slice($this->stack, $stackKey));
+            $stackCall = implode(PHP_EOL . '" -> "', array_slice($this->stack, $stackKey));
             throw new Exception(sprintf('Cyclic dependencies detected for class "%s": "%s"', $className, $stackCall));
         } else {
             array_push($this->stack, $className);
@@ -66,6 +72,16 @@ class DependenciesContainer
             array_pop($this->stack);
         }
         return $dependency;
+    }
+
+    /**
+     * @param string $className name of dependency
+     *
+     * @return bool
+     */
+    public function has($className)
+    {
+        return array_key_exists($className, $this->dependencies);
     }
 
     /**

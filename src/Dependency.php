@@ -15,47 +15,35 @@ class Dependency
     /**
      * @var DependenciesContainer
      */
-    private static $container;
+    protected $container;
 
     /**
      * @var string
      */
-    private $className;
+    protected $className;
 
     /**
      * @var array|null
      */
-    private $dependencies;
+    protected $dependencies;
 
     /**
      * @var object
      */
-    private $object;
-
-    /**
-     * @param DependenciesContainer $container
-     */
-    public static function initialize(DependenciesContainer $container)
-    {
-        static $init = true;
-        if ($init) {
-
-            self::$container = $container;
-
-            $init = false;
-        }
-    }
+    protected $object;
 
     /**
      * Dependency constructor.
      *
+     * @param DependenciesContainer $container
      * @param string $className
      * @param array $dependencies
      *
      * @throws
      */
-    public function __construct($className, $dependencies = null)
+    public function __construct(DependenciesContainer $container, $className, $dependencies = null)
     {
+        $this->container = $container;
         if (!class_exists($className)) {
             throw new Exception('Class "' . $className . '" not found. Dependency could not be initialized!');
         }
@@ -76,7 +64,7 @@ class Dependency
                 $dependencies = [];
                 foreach ($this->dependencies as $dependency) {
                     if (is_string($dependency) && class_exists($dependency)) {
-                        $dependencies[] = self::$container->get($dependency);
+                        $dependencies[] = $this->container->get($dependency);
                     } else {
                         $dependencies[] = $dependency;
                     }
