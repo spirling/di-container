@@ -15,12 +15,12 @@ class DependenciesContainer
     /**
      * @var Dependency[]
      */
-    private $dependencies;
+    protected $dependencies;
 
     /**
      * @var array
      */
-    private $stack = [];
+    protected $stack = [];
 
     /**
      * DependenciesContainer constructor.
